@@ -1,9 +1,10 @@
 name: Update lecture PDFs
 
 on:
+  push:
   workflow_dispatch:
   schedule:
-    - cron: '0 6 * * *'
+    - cron: '27 4 * * *'
 
 permissions:
   contents: write

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import subprocess
 import sys
@@ -89,7 +90,15 @@ def lecture_name(url: str) -> str:
 
 
 def export_lecture(lecture_url: str, output_file: Path, decktape_bin: str, dry_run: bool) -> int:
-    cmd = [decktape_bin, lecture_url, str(output_file)]
+    cmd = [decktape_bin]
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        cmd.extend(
+            [
+                "--chrome-arg=--no-sandbox",
+                "--chrome-arg=--disable-setuid-sandbox",
+            ]
+        )
+    cmd.extend([lecture_url, str(output_file)])
     if dry_run:
         print("DRY RUN:", " ".join(cmd))
         return 0
