@@ -11,7 +11,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import Iterable
 from urllib.parse import urljoin, urlparse, urlunparse
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 
 
 DEFAULT_BASE_URL = "https://zzhang.xyz/teaching/security1-fall26/lectures/"
@@ -32,7 +32,13 @@ class AnchorParser(HTMLParser):
 
 
 def fetch_html(url: str) -> str:
-    with urlopen(url) as response:  # nosec B310 - fixed URL provided via CLI by repository maintainer
+    request = Request(
+        url,
+        headers={
+            "User-Agent": "Mozilla/5.0 (compatible; Sec1-Slides-export/1.0)",
+        },
+    )
+    with urlopen(request) as response:  # nosec B310 - fixed URL provided via CLI by repository maintainer
         return response.read().decode("utf-8", errors="replace")
 
 
